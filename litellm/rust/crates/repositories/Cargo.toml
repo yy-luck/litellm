@@ -13,6 +13,7 @@ litellm-error.workspace = true
 litellm-python-compat.workspace = true
 serde.workspace = true
 sqlx.workspace = true
+tokio = { workspace = true, features = ["rt"] }
 tracing.workspace = true
 
 [dev-dependencies]

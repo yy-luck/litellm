@@ -7,7 +7,7 @@ repository.workspace = true
 include = ["Cargo.toml", "src/**", "queries/**", ".sqlx/**"]
 
 [dependencies]
-chrono.workspace = true
+chrono = { workspace = true, features = ["serde"] }
 futures-util.workspace = true
 litellm-circuit-breaker.workspace = true
 litellm-error.workspace = true
