@@ -16,6 +16,7 @@ from litellm.proxy.db.native_database import (
     resolve_native_endpoint,
     writer_token_rotation,
 )
+from litellm.repositories import rust_database
 from litellm.rust_bridge._native import NativeDatabase, NativeDatabaseFailure
 
 if TYPE_CHECKING:
@@ -60,14 +61,22 @@ class Database:
 
     @classmethod
     async def open(
-        cls, prisma: "PrismaClient", writer_url: str, reader_url: str | None, native_connections: int
+        cls,
+        prisma: "PrismaClient",
+        writer_url: str,
+        reader_url: str | None,
+        *,
+        writer_connections: int,
+        reader_connections: int,
     ) -> "Database":
-        if native_connections == 0:
+        if writer_connections == 0:
             return cls(prisma=prisma, native=None)
         try:
-            writer: Final = await resolve_native_endpoint(writer_url, native_connections)
+            writer: Final = await resolve_native_endpoint(writer_url, writer_connections)
             reader: Final = (
-                None if reader_url is None else await resolve_native_endpoint(reader_url, native_connections)
+                None
+                if reader_url is None or reader_connections == 0
+                else await resolve_native_endpoint(reader_url, reader_connections)
             )
             native: Final = await NativeDatabase.connect(
                 ServiceLoggingEvents(loop=asyncio.get_running_loop(), service_logging=proxy_service_logging),
@@ -85,9 +94,10 @@ class Database:
         )
         reader_refresh: Final = (
             ()
-            if reader_url is None
+            if reader is None or reader_url is None
             else _token_refresh(native.set_reader_password, reader_token_rotation(reader_url), reader_url)
         )
+        rust_database.install(native)
         return cls(
             prisma=prisma,
             native=native,
@@ -104,6 +114,7 @@ class Database:
             await self.prisma.aclose()
         finally:
             if self.native is not None:
+                rust_database.clear(self.native)
                 await self.native.close()
 
 
