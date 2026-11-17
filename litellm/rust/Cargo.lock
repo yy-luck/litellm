@@ -3942,6 +3942,7 @@ dependencies = [
  "thiserror 2.0.21",
  "tokio",
  "url",
+ "veil",
 ]
 
 [[package]]
@@ -4610,6 +4611,7 @@ dependencies = [
  "litellm-redis-resolve",
  "litellm-redis-store",
  "litellm-redis-types",
+ "litellm-repositories",
  "litellm-router-core",
  "litellm-router-types",
  "litellm-secret-value",
@@ -4775,6 +4777,21 @@ dependencies = [
  "litellm-secret-value",
  "rstest",
  "url",
+]
+
+[[package]]
+name = "litellm-repositories"
+version = "0.1.0"
+dependencies = [
+ "chrono",
+ "litellm-db",
+ "litellm-error",
+ "litellm-python-compat",
+ "rstest",
+ "serde",
+ "sqlx",
+ "tokio",
+ "tracing",
 ]
 
 [[package]]
