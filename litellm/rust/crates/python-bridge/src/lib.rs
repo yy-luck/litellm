@@ -55,6 +55,7 @@ mod _native {
     #[pymodule_export]
     use crate::db_repository::{
         RustJwtKeyMappingRepository, RustKeyRepository, RustModelAccessGroupRepository,
+        RustOrganizationRepository, RustTeamMembershipRepository, RustTeamRepository,
     };
     #[cfg(feature = "panic-test")]
     #[pymodule_export]
@@ -227,6 +228,9 @@ mod tests {
                 "RustKeyRepository",
                 "RustJwtKeyMappingRepository",
                 "RustModelAccessGroupRepository",
+                "RustOrganizationRepository",
+                "RustTeamMembershipRepository",
+                "RustTeamRepository",
                 "trace_encode_error",
                 "bundled_model_cost_map",
                 "NativeModelCostMap",
